@@ -1,0 +1,30 @@
+(M)ongoDB
+	MongoDB (http://www.mongodb.org)
+(E)xpress
+	Express (http://expressjs.com) , criado em 2009 por TJ Holowaychuk, é um framework web light-weight que ajuda na organização de sua aplicação web na arquitetura MVC no lado do servidor.
+(A)ngularJS
+	AngularJS (http://angularjs.org/) é um framework MVC no lado do cliente voltado para Single Page Web Applications (SPA) criado pela Google
+(N)odeJs
+	Node.js (http://nodejs.org) é uma plataforma para aplicações JavaScript criada por Ryan Dahl sob o ambiente de execução JavaScript do Chrome.
+
+
+Grunt (http://gruntjs.com) para automatizar tarefas e
+Bower (http://bower.io) para gerenciar nossos pacotes de front-end.
+
+Vamos criar testes unitários utilizando o Karma/Jasmine e testes end-to-end (e2e) com Protractor.
+Integraremos nossa aplicação com o Travis, um servidor de integração contínua gratuito para projetos open source.
+
+página 9
+Capítulo 2 Express: framework web para Node.js
+
+contatooh
+	app
+		controllers -> controladores chamados pelas rotas da aplicação
+		models -> models que representam o domínio do problema
+		routes -> rotas da aplicação
+		views -> views do template engine
+	config -> configuração do express, banco de dados etc.
+	public -> todos os arquivos acessíveis diretamente pelo navegador
+
+O arquivo package.json possui informações sobre o projeto. Podemos criar na mão ou utilizar:
+	npm init
