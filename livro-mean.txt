@@ -28,3 +28,41 @@ contatooh
 
 O arquivo package.json possui informações sobre o projeto. Podemos criar na mão ou utilizar:
 	npm init
+
+Instalação do Express: npm install express@4.8 --save
+o --save grava em package.json a dependência e sua versão.
+
+npm install: É altamente encorajado distribuir sua aplicação sem a pasta node_modules e deixar que as dependências listadas no arquivo package.json sejam baixadas através do comando npm install. A razão disso é que o Node.js pode ter compilado algum módulo nativamente para sua máquina e isso pode não funcionar em outro sistema operacional. Rodando npm install, temos a garantia de que os módulos serão compilados na máquina que rodará nossa aplicação.
+
+Podemos agrupar as configurações do Express em três grupos: variáveis de ambiente, middlewares e rotas.
+
+O middleware express.static:
+	Para fazer com que os arquivos dentro da pasta public sejam acessíveis pelo usuário através do navegador:
+		app.use(express.static('./public'));
+
+		recebe ./public por que a referência é aonde é executado o arquivo Node(nosso server.js que está na raiz do contatooh)
+
+A pasta public conterá os arquivos HTML ????
+
+View e template engine:
+	EJS (http://embeddedjs.com) que possui uma sintaxe similar ao HTML.
+	npm install ejs --save
+
+
+Ao mover o index.html para a pasta app/views como ejs, ninguém mais poderia visualizar o arquivo, já que não está mais em uma pasta definida como pública. Aqui entra o arquivo de rotas:
+
+Controllers, cada controller criado define através de uma propriedade ( estilo java script) as funções de controle, e depois no arquivo de rotas definimos qual URL atende qual método.
+
+nodemon
+=======
+Precisamos reiniciar o servidor toda vez que realizarmos alterações. Podemos resolver este problema usando o nodemon: 
+
+	npm install nodemon -g
+	nodemon server
+
+Com o nodemon, ele fica monitorando e toda vez que alterarmos um arquivo ele irá reiniciar o servidor para nós.
+
+
+Página 26:
+2.9 Carregando dependências com expressload
+
