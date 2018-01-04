@@ -1,6 +1,7 @@
 // config/express.js
 var express = require('express');
-var home = require('../app/routes/home');
+//var home = require('../app/routes/home'); com o express load isso aqui não é mais necessário
+var load = require('express-load');
 
 module.exports = function() {
     
@@ -16,7 +17,11 @@ module.exports = function() {
     app.set('views','./app/views');
 
     // abaixo da configuração do último middleware
-    home(app);
+    //home(app);
+    load('models', {cwd: 'app'})
+    .then('controllers')
+    .then('routes')
+    .into(app);
 
     return app;
 };

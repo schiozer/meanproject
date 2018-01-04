@@ -63,6 +63,30 @@ Precisamos reiniciar o servidor toda vez que realizarmos alterações. Podemos r
 Com o nodemon, ele fica monitorando e toda vez que alterarmos um arquivo ele irá reiniciar o servidor para nós.
 
 
-Página 26:
-2.9 Carregando dependências com expressload
+É possível carregar as dependências com o Express load, sem ter que ficar utilizando required para carregar dependencias a todo momento
+express-load (https://github.com/jarradseers/express-load)
+	npm install express-load --save
 
+	com isso conseguimos colocar o segundo comando:
+
+    load('models', {cwd: 'app'})
+    .then('controllers')
+    .then('routes')
+    .into(app);
+
+É importante ressaltar que a ordem faz diferença. Um ponto importante é que precisamos carregar as pastas seguindo a ordemmodels, controllers e routes, caso contrário não conseguiremos, por exemplo, ter acesso aos nossos controllers em nossas rotas caso os módulos com nossos controllers tenham sido carregados por último.
+
+Pasta padrão
+O parâmetro {cwd: ‘app’} foi necessário para mudar o diretório padrão, pois a função procura as pastas no diretório raiz contatooh e precisamos que ela considere a pasta contatooh/app.
+
+RETORNANDO ARQUIVOS JSON
+
+	module.exports = function() {
+		var controller = {};
+		
+		controller.listaContatos = function(req, res) {
+			res.json(contatos);
+		};
+		
+		return controller;
+	};
