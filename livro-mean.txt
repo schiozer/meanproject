@@ -90,3 +90,42 @@ RETORNANDO ARQUIVOS JSON
 		
 		return controller;
 	};
+
+
+res.json vs. res.send
+----------------------
+De acordo com a documentação do Express, res.json é idêntico a res.send quando um objeto ou array é passado. A diferença é que o primeiro explicitamente converte tipos não-objeto como null e undefined. Usamos res.json também para deixar clara nossa intenção de trabalhar com este tipo de dado.
+
+REST (Representational State Transfer)
+======================================
+O acrônimo REST (Representational State Transfer) foi criado por Roy Fielding,
+umdos principais criadores do protocoloHTTP. Ele define um conjunto de operações aplicáveis a todos os recursos de informação utilizando o protocolo HTTP. As operações mais utilizadas são DELETE, GET, POST e PUT.
+
+No servidor Express, temos além da função app.get as funções app.delete, app.put e app.post, cada uma correspondendo a um verbo HTTP utilizado pelo padrão REST
+
+Consideração sobre os verbos DELETE e PUT
+-----------------------------------------
+Nem todos os navegadores suportamos verbos DELETE e PUT, inclusive, há redes que filtram requisições destes tipos. Uma solução empregada é usar o verbo POST, mas adicionando no header da requisição o Content-type X-HTTP-Method-Override.
+
+No Express, usamos o middleware method-override (https://github.com/expressjs/method-override)
+Para funcionar, ele depende de que a requisição seja parseada através do middleware body-parser (https://github.com/expressjs/body-parser).
+
+	npm install body-parser@1.6 method-override@2.1 --save
+
+BOWER
+=====
+O Bower (http://bower.io) é um gerenciador de pacotes para web voltado para front-end que realiza grande parte das tarefas que faríamos manualmente, inclusive gerencia as dependências de sua aplicação. Outro ponto interessante é que ele não gerencia pacotes exclusivamente JavaScript, mas também CSS e HTML.
+
+instalação:
+	npm install bower -g
+
+Bower vs. npm
+-------------
+Podemos comparar o Bower com npm, com a diferença de que o primeiro é voltado para pacotes front-end e o segundo para pacotes backend, apesar de alguns desenvolvedores tentarem utilizar o npm para as duas finalidades.
+
+Bower e Git
+===========
+O Bower depende do Git instalado para funcionar. No Windows, que não vem com o Git instalado por padrão, é necessário instalar a versão (http://msysgit.github.io/) . Durante a instalação, escolha a opção “Use Git fromtheWindows Command Prompt” para que seja possível executar os comandos do git através do terminal doWindows.
+
+
+
