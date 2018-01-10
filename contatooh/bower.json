@@ -1,0 +1,19 @@
+{
+  "name": "contatooh",
+  "version": "0.0.0",
+  "homepage": "https://github.com/schiozer/meanproject",
+  "authors": [
+    "schiozer <schiozer@yahoo.com.br>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.6.8"
+  }
+}
