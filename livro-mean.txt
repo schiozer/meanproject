@@ -53,7 +53,7 @@ Ao mover o index.html para a pasta app/views como ejs, ninguém mais poderia vis
 
 Controllers, cada controller criado define através de uma propriedade ( estilo java script) as funções de controle, e depois no arquivo de rotas definimos qual URL atende qual método.
 
-nodemon
+nodemon, mantendo servidor no ar
 =======
 Precisamos reiniciar o servidor toda vez que realizarmos alterações. Podemos resolver este problema usando o nodemon: 
 
@@ -118,6 +118,9 @@ O Bower (http://bower.io) é um gerenciador de pacotes para web voltado para fro
 
 instalação:
 	npm install bower -g
+	npm install bower@1.3 -g, instalei a versão 1.3
+	
+	O parâmetro -g torna o módulo acessível em qualquer local em nosso terminal, isto é, globalmente.
 
 Bower vs. npm
 -------------
@@ -126,6 +129,140 @@ Podemos comparar o Bower com npm, com a diferença de que o primeiro é voltado 
 Bower e Git
 ===========
 O Bower depende do Git instalado para funcionar. No Windows, que não vem com o Git instalado por padrão, é necessário instalar a versão (http://msysgit.github.io/) . Durante a instalação, escolha a opção “Use Git fromtheWindows Command Prompt” para que seja possível executar os comandos do git através do terminal doWindows.
+
+No Bower, o arquivo que lista nossas dependências é chamado bower.json
+Para inicitar um projeto com Bower:
+	bower init
+
+Precisamos do Angular e do Bootstrap. O livro recomenda versão 1.3, mas irei instalar a mais atual
+	bower install angular#1.3 --save
+sempre --save para salvar a dependência no nosso json de configuração, que nesse caso é o bower.json
+
+
+Arquivo .bowerrc
+================
+
+É possível alterar o nome da pasta criada pelo Bower para armazenar as dependências através do arquivo .bowerrc
+
+Esse arquivo é um JSON que possui apenas uma propriedade: directory, que informa em qual diretório serão baixados os pacotes do projeto.
+
+Após alterar o diretório é preciso apagar a pasta anterior, bower_components no caso da primeira vez.
+
+Principais comandos Bower:
+
+bower install, baixa e instala dependencias
+bower search angular, para procurar por bibliotecas com o texto digitado
+bower info angular, busca informações da biblioteca, como versões disponíveis
+bower uninstall
+--offline
+bower install angular#1.3 --save --offline, Todo pacote baixado pelo Bower fica armazenado em um cache que pode ser utilizado offline
+
+
+Angular JS
+======================================
+
+Manipulação de DOM, tem os seguintes:
+- Preso à estrutura
+- Testabilidade
+- Consistência entre model e view
+- Ausência de um padrão
+
+frameworks MVC client-side
+==========================
+- BackBone (http://backbonejs.org)
+- Ember (http://emberjs.com)
+- Can (http://canjs.com)
+- AngularJS (http://angularjs.org)
+
+Angular JS é um framework MVC client-side que trabalha com tecnologias já estabelecidas: HTML, CSS e JavaScript. Criado na Google e liberado como projeto open-source para o público em 2009, seu foco reside na criação de Single Page Applications (SPA), embora isso não o impeça de ser utilizado em outros tipos de aplicação.
+
+Single Page Application (SPA)
+=============================
+SPA é uma aplicação entregue ao navegador que não recarrega a página durante seu uso, por isso já carrega todo JavaScript e CSS de que precisa.
+
+Começando com Angular JS
+========================
+	Para utilizar o Angular, é preciso importar a biblioteca com script dentro do body (por último paraa permitir que todo conteúdo html carregue antes).
+		<script src="vendor/angular/angular.js"></script>
+
+	Além disso, AngularJS gerencia apenas o bloco com o atributo ng-app, sendo assim precisamos definir esse atributo na tag que queremos gerenciar. No livro coloquei no html, mas poderia ser em um nível mais abaixo.
+
+	<html ng-app="contatooh">
+
+	atribuímos o valor contatooh, que na verdade é o nome do módulo principal da aplicação, aquele pelo qual realizamos uma série de configurações.
+
+	Criamos um módulo através da função angular.module. Ela recebe dois parâmetros: o primeiro é o nome do módulo; o segundo, um array comtodas as suas dependências.
+
+
+	Angular expression (AE): Uma AE é representada por {{ }}.
+	-----------------------
+
+	Angular JS Controller
+	--------------------
+	A diretiva ng-app apenas indica que a tag html é gerenciada pelo AngularJS, inclusive todos seus elementos filhos, mas não indica quem fornecerá os dados ou quem responderá às ações levadas com esses elementos. Em AngularJS, dizemos que estas são responsabilidades de um controller 
+
+	AngularJS não é rígido na escolha de um model, isto é, qualquer tipo literal do JavaScript ou objeto podem ser models.
+
+	Consideração sobre templates server-side X clientside
+	-----------------------------------------------------
+	Você já deve ter percebido a diferença entre <%= > e {{ }}. O primeiro, é uma expressão avaliada no lado do servidor pelo Express. Depois de processada, o que é enviado para o navegador é o HTML já mesclado, isto é, com a informação já substituída. A AE, por outro lado, é avaliada no navegador.
+
+
+	Single Page Application (SPA) e Rotas do Anjular JS
+	---------------------------------------------------
+	Single Page Application (SPA) é uma aplicação entregue para o navegador que não recarrega a página durante seu uso. Em SPA, a página principal, por exemplo, index.html, é carregada apenas uma vez e possui uma grande lacuna preenchida com o conteúdo de outras páginas através das URLs acessadas. Essas páginas são chamadas de parciais.
+
+	Sendo assim temos apenas uma URL, que é da principal, não temos das principais, se o usuário quiser, por exmeplo, colocar a URL da parcial no favorito não vai conseguir.
+	Mas para resolver esse problemas, existe o sistemas de Rotas, que adiciona uma marcação, que é o # que permite extrair qual parcial deve ser processada.	
+	Exemplo: http://localhost:3000/index.html#/contatos.
+
+	O módulo ngRoute
+	----------------
+
+	AngularJS possui um sistema de rotas que visa blindar o desenvolvedor da complexidade pela atualização de áreas da página utilizando Ajax, mais uma vez, evitando que ele manipule o DOM diretamente. o sistema de rotas do AngularJS só funcionará se você estiver rodando sua aplicação num servidor web, Antes da versão 1.2, o AngularJS já vinha com o sistema de rotas, mas a equipe decidiu movê-lo do core para um módulo em separado chamado ngRoute. Precisamos baixá-lo através do Bower na linha de comando
+
+	bower install angular-route#1.3 --save
+
+	Para utilizar o módulo é preciso incluí-lo no html principal:
+		<script src="vendor/angular-route/angular-route.js"></script>
+	e no módulo do main.js como dependência:
+		angular.module('contatooh', ['ngRoute']);
+
+	Pronto, para configurar o uso do angular é preciso colocar no body de index a diretiva ng-view dentro de uma div e não podemos configurar o controller no html, uma vez que eles serão configurados nas rotas.
+
+	A diretiva ng-view sinaliza para o sistema de rotas a área da página que receberá views parciais. A diferença de uma view parcial para uma view como a index.html é que a primeira não possui as tags <html>, <head>.
+
+4.15 Criando views parciais
+
+	ng-view
+	=======
+	No lugar de criarmos uma <div> com a diretiva ng-view, poderíamos utilizar a tag <ng-view></ng-view>. Lembre-se que diretivas do AngularJS podem ser utilizadas como tags, atributos e até mesmo como comentário! Para saber quais formatos estão disponíveis, precisamos consultar a documentação do AngularJS (http://docs.angularjs.org/guide/directive) .
+
+	definindo rotas:
+	================
+	angular.module('contatooh', ['ngRoute'])
+    .config(function($routeProvider) {
+
+        $routeProvider.when('/contatos', {
+            templateUrl: 'partials/contatos.html',
+            controller: 'ContatosController'
+            });
+
+    }
+	);
+
+	isso é no main da aplicação Angular JS, no módulo principal.
+
+	O objeto $routeProvider possui a função when. Nela informamos a rota (sem o #) e no segundo parâmetro um objeto que define qual template (parcial) será carregado para a rota e qual será seu controller através das propriedades templateURL e controller.
+
+	Um ponto importante é que toda rota configurada por $routeProvider para ser disparada deve ser acessada através da URL da página principal adicionando o prefixo #, o famoso hash. Por exemplo:
+		http://localhost:3000/index.html#/contatos
+	Como nossa página index.html está dentro da pasta public podemos acessá-la diretamente através da URL /, é por isso que também podemos disparar a rota do AngularJS desta maneira mais enxuta. Podemos testar:
+		http://localhost:3000/#/contatos
+
+
+
+
 
 
 
