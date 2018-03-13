@@ -261,8 +261,234 @@ Começando com Angular JS
 		http://localhost:3000/#/contatos
 
 
+	Usando o Bootstrap
+	==================
+		• Reset CSS
+		• Estilo visual base pra maioria das tags
+		• Ícones através do glyphicon
+		• Grids prontos para uso
+		• Componentes CSS
+		• Plugins JavaScript
+		• Tudo responsivo e mobile-first
 
 
 
+bower install bootstrap#3.3 --save
+
+perceba que o bower baixa também o jQuery que é dependência
+
+Começando com bootstrap
+-----------------------
+
+<!-- public/index.html -->
+...
+<head>
+	<meta charset="UTF-8">
+	<title>Contatooh</title>
+	<link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap-theme.css">
+</head>
+	
+<body class="container">
+
+A classe container fará com que todo o conteúdo da página fique alinhado ao centro.
+
+Com angular, Como todas as parciais serão adicionadas dentro da <div> coma diretiva ng-view filha de body, todas serão centralizadas.
+
+página 76
+
+COMO IDENTAR O CÓDIGO NO VSCODE
+===============================
+	ALT+SHIFT+F
+
+Seguindo o contatos.html
+
+• btn: classe que fornece um visual diferenciado para o botão.
+• btn-primary: destaca o botão (azulado e maior) quando combinada com a classe btn.
+• btn-warning: destaca o botão, sem aumentar seu tamanho colocando-o na cor laranja.
+• jumbotron: área de destaque com espaço generoso, normalmente usado para chamar bastante atenção na página.
+• table: aplica um estilo diferenciado para tabela. 
+• table-hover: quando combinada coma classe table destaca o elemento da lista passando o mouse sobre ele.
+• table-responsive: independe da classe table. Quando envolve uma tabela, adiciona uma scrollbar horizontal quando a tela não for suficiente para exibir todas as colunas.
+• text-center: centraliza o texto.
+
+A diretiva ng-model e filtragem da lista
+========================================
+Não podemos simplesmente utilizar uma AE {{}} em nosso input, porque toda AE é somente leitura. queremos ler e gravar em uma propriedade no escopo do controller, isto é, queremos fazer two-way data binding. Para isso, usamos a diretiva ng-model:
+
+<tr ng-repeat="contato in contatos | filter: filtro">
 
 
+Integrando AngularJS e Express
+==============================
+
+O AngularJS possui o serviço $http responsável por requisições Ajax. Injetamos este serviço em nossos controllers como qualquer outro artefato do framework:
+angular.module('contatooh').controller('ContatosController', function($scope, $http) {
+});
+
+O serviço $http recebe como parâmetro um objeto com as configurações da requisição.
+{
+	method: /* método utilizado, pode ser GET, POST, PUT ou DELETE */
+	url: /* endereço do recurso acessado */
+	data: /* objeto no qual cada propriedade será um parâmetro na requisição */
+}
+
+Exemplo: $http({method: 'GET', url: '/contatos'});
+
+AngularJS possui atalhos para os métodos GET e POST através das funções $http.get(‘url’) e $http.post(‘url’).
+
+
+Programação assíncrona e callback HELL
+======================================
+Toda requisição Ajax é assíncrona por natureza e nunca sabemos quando ela será concluída de fato. É por isso que uma estratégia comum é passar para essas funções um callback, aquela função que guarda nossa lógica que será chamada pela função assíncrona assim que ela for concluída. Inclusive, podemos capturar no callback o resultado da função.
+
+Exemplo de callback HELL:
+
+function exibeContatos(contatos, callback) {
+	callback(contatos);
+}
+
+function modificaContatos(contatos, callback) {
+	callback(contatos);
+}
+
+function atualizaContatos(contatos, callback) {
+	callback(contatos);
+}
+
+$http.get('/contatos', function(contatos) {
+	exibeContatos(contatos, function(contatos) {
+		modificaContatos(contatos, function(contatosModificados) {
+			atualizaContatos(contatosModificados, function(contatos) {
+				$scope.mensagem = { texto: 'Contatos atualizados com sucesso' };
+			});
+		});
+	});
+});
+
+
+O callback HELL visualmente é caracterizado pela pyramid of DOOM, um triângulo deitado que fica evidente com o aninhamento das funções de callback. Isso ainda acarreta o problema de Utilizar try catch, pois o código sendo assíncrono não estará na pilha de execução no momento.
+
+Para combater o callback HELL utilizamos PROMISES !
+
+O padrão Promise
+================
+O primeiro passo para entender este mistério é saber que $http não retorna a lista de contatos, mas uma promise (promessa) de que ele tentará buscar esses dados:
+	var promise = $http({method: 'GET', url: '/contatos'});
+Uma promise é um objeto que fornecerá o resultado futuro de uma ação.
+
+Estados de uma promise
+----------------------
+Uma promise possui três estados e dependendo desses estados, ações são executadas:
+
+• fulfilled: quando a promise é bem-sucedida;
+• rejected: quando a promise é rejeitada;
+• failed: quando não é nem bem-sucedida nem rejeitada.
+
+Uma promise que foi fullfilled ou rejected não pode ser fullfilled ou rejected novamente.
+
+As funções then e catch Uma promise possui o método then, que recebe como parâmetros callbacks. O primeiro é executado quando o status da promise for fulfilled; o segundo, para os estados rejected e failed.
+
+function obterDados(retorno) {
+	/* faz algo com o retorno */
+}
+
+var promise = $http.get('/contatos');
+
+promise
+	.then(obterDados)
+	.catch(erro) {
+		console.log(erro.status)
+		console.log(erro.statusText)
+	}
+);
+
+Nesse exemplo, através do parâmetro retorno, temos acesso a propriedades especiais que nos permitem acessar os dados retornados, inclusive obter mensagens de erro enviadas pelo servidor:
+	• data: o body da resposta transformado e pronto para usar;
+	• status: número que indica o status HTTP da resposta;
+	• statusText: texto HTTP da resposta.
+	• header: header da mensagem
+	• config: este último com as configurações utilizadas na requisição.
+
+As funções success e error
+--------------------------
+O objeto $http adiciona convenientemente em suas promises as funções success e error. A primeira recebe o callback que será executado quando a promise for fulfilled. Já a segunda, o callback que será executado quando a promise for rejected ou failed.
+
+var promise = $http.get('/contatos');
+promise
+	.success(function(data, status, headers, config) {
+		$scope.contatos = data;
+	})
+	.error(function(statusText, status, headers, config) {
+		console.log(statusText);
+		console.log(status);
+	});
+
+Ainda podemos omitir a declaração da variável e omitir os parâmetros que não nos interessam:
+
+$http.get('/contatos')
+	.success(function(data) {
+		$scope.contatos = data;
+	})
+	.error(function(statusText) {
+		console.log(statusText);
+	});
+
+
+$http vs. $.ajax ==> O $.ajax. é o jQuery, caso queiramos utilizar, seremos responsáveis pelas notificações ao framework, que ja é feito pelo $http utilizando $scope.$apply(); (ver detalhes na página 95)
+
+*** Detaalhes sobre promises: https://promisesaplus.com/
+
+
+O módulo ngResource:
+====================
+Apesar de $http ser funcional, AngularJS possuiumserviço demais alto nível chamado $resource, específico para consumir REST Endpoints. O serviço $resource não faz parte do core do AngularJS, logo, precisamos do módulo ngResource para que ele esteja disponível, utilizando o bower.
+
+bower install angular-resource#1.3 --save
+
+Utilização do ngResource
+------------------------
+
+angular.module('contatooh').controller('ContatosController', function($scope, $resource) {
+	// código existente omitido
+}
+
+injeta o $resource e depois usa da seguinte forma:
+
+var Contato = $resource('/contatos/:id');
+
+O serviço $resource nos devolve um objeto que permite realizar uma série de operações seguindo o padrão REST para o recurso /contatos
+
+A função query, por debaixo dos panos,monta uma requisição do tipo GET para o recurso /contatos e como ela é uma requisição assíncrona, podemos pedir que ela retorne uma promise.
+
+var promise = Contato.query().$promise;
+promise
+	.then(function(contatos) {
+		$scope.contatos = contatos;
+	})
+	.catch(function(erro) {
+		console.log("Não foi possível obter a lista de contatos");
+		console.log(erro);
+	});
+
+o código acima pode ser enxugado, utilizando callbacks:
+
+	var Contato = $resource('/contatos/:id');
+
+	Contato.query(function(contatos) {
+			$scope.contatos = contatos;
+		},
+		function(erro) {
+			console.log("Não foi possível obter a lista de contatos");	
+			console.log(erro);
+		}
+	);
+
+req.params contem os dados de parâmtros da requisição.
+
+=================================
+BACKEND VS FRONTEND
+=================================
+Não confunda o que está sendo escrito no backend com o frontend
+
+5.11 Exibindo contato selecionado página 112
