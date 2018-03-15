@@ -492,3 +492,16 @@ BACKEND VS FRONTEND
 Não confunda o que está sendo escrito no backend com o frontend
 
 5.11 Exibindo contato selecionado página 112
+
+Mais do Bootstrap:
+===============================
+
+• form-group: permite agrupar elementos de entrada com seu label;
+• form-control: geralmente utilizado em elementos de entrada, garantindo largura de 100%;
+• input-group: permite adicionar alguma decoração ao elemento de entrada, como se ele fizesse parte dele;
+• input-group-addon: adiciona decoração ao elemento de entrada. Normalmente utilizado em tags do tipo span.
+
+
+5.14 Serviços: organizando melhor nosso código
+
+página 122

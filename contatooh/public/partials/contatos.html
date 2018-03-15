@@ -24,6 +24,8 @@
     Não há contatos cadastrados
 </p>
 
+<a ng-href="#/contato" class="btn btn-primary">Novo Contato</a>
+
 <div class="table-responsive">
     <table class="table table-hover">
         <tr>
@@ -33,7 +35,7 @@
         </tr>
         <tr ng-repeat="contato in contatos | filter: filtro">
             <td>
-                <a>{{contato.nome}}</a>
+                <a ng-href="#/contato/{{contato._id}}">{{contato.nome}}</a>
             </td>
             <td>{{contato.email}}</td>
             <td class="text-center">

@@ -1,8 +1,10 @@
 
 
-angular.module('contatooh', ['ngRoute', 'ngResource']);
-    .config(function($routeProvider) {
+angular.module('contatooh', ['ngRoute', 'ngResource'])
+    .config(function($routeProvider, $locationProvider) {
 
+        $locationProvider.hashPrefix('');
+        
         $routeProvider.when('/contatos', {
             templateUrl: 'partials/contatos.html',
             controller: 'ContatosController'
@@ -13,6 +15,11 @@ angular.module('contatooh', ['ngRoute', 'ngResource']);
             controller: 'ContatoController'
             });
 
+        $routeProvider.when('/contato', { // para cadastrar um contato
+            templateUrl: 'partials/contato.html',
+            controller: 'ContatoController'
+            });
+    
         $routeProvider.otherwise({redirectTo: '/contatos'});
     }
 );
