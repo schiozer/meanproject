@@ -46,7 +46,7 @@ angular.module('contatooh').controller('ContatosController', function ($scope, $
 		});
 	*/
 
-	var Contato = $resource('/contatos/:id');
+	//var Contato = $resource('/contatos/:id');
 
 	function buscaContatos() {
 		

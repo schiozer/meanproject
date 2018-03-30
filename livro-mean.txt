@@ -502,6 +502,134 @@ Mais do Bootstrap:
 • input-group-addon: adiciona decoração ao elemento de entrada. Normalmente utilizado em tags do tipo span.
 
 
-5.14 Serviços: organizando melhor nosso código
+Defindo um serviço no Angular Js para encapsular os $resources:
 
-página 122
+factory, que recebe como primeiro parâmetro o nome do serviço e, no segundo, a função que o define. Repare que na função temos como dependência $resource:
+
+E a função service?
+AngularJS também possui a função service com o mesmo propósito, porém, no lugar de retornar um objeto, ela retorna uma função. Na própria documentação do AngularJS, eles sugerem o uso de factory, pois service entrará em desuso.
+
+Delimitando o contexto: impedância
+No contexto de nossa aplicação Contatooh, tanto um banco de dados relacional quanto um NoSQL demandará do desenvolvedor a tradução dos dados retornados do banco para algomanipulável na linguagem de programação escolhida, em nosso caso, JavaScript. Essa discrepância da estrutura dos dados armazenados no banco de dados e as estruturas de dados em memória é chamada de impedância [2] e em algum momento o desenvolvedor precisará resolvê-la.
+
+
+
+Bancos de Dados Orientados a documentos que armazenam JSON:
+
+Apache CouchDB (http://couchdb.apache.org)
+JasDB (http://www.oberasoftware.com)
+NeDB (Node Embedded Database) (https://github.com/louischatriot/nedb)
+Terrastore (https://code.google.com/p/terrastore)
+
+MONGO DB
+=========
+=========
+=========
+
+Acabei instalando o Mongo DB usando c:\ no MSI.
+
+Para testar
+-----------
+mongo --port 27017 --host localhost
+
+Para instalar o serviço
+-----------------------
+mongod --dbpath=C:\mongodb --logpath=C:\mongodb\log.txt --install
+
+tem que rodar com cmd como administrador
+
+depois entrar nos serviços e rodar o serviço
+
+Mongo DB armazedo os dados no tipo BSON, parecido com JSON.
+// JSON
+	{
+		"nome" : "Flávio Almeida"
+	}
+// BSON
+	{
+		"_id" : ObjectId("5303e0649fd139619aeb783e")
+		"nome" : "Flávio Almeida"
+	}
+
+A grosso modo, a diferença entre BSON e JSON mora na quantidade dos tipos de dados suportados em cada uma deles: enquanto JSON possui seis tipos ( Array, Boolean, null, Number, Object e String) o BSON, possui mais de 15 tipos! Veremos alguns desses tipos, porém há um que merece destaque neste momento: ObjectId.
+
+chave _id contendo como valor padrão um objeto do tipo ObjectId, é a "chave primária"
+
+Quando você instala o MongoDB em sua máquina, pelo menos uma instância você terá rodando. Cada instância pode ter vários bancos de dados e cada banco pode ter muitas collections.
+
+Criando o banco contatooh
+
+> use contatooh
+cria o banco
+verificar qual bando está sendo apontado
+
+> db
+
+> contato
+{ "nome" : "Nome do Contato" }
+> db.contatos.insert(contato)
+WriteResult({ "nInserted" : 1 })
+>
+
+show collections, mostra as coleções. Porém devemos estar com o banco apontando ou seja ter feito o use contatooh
+
+db.dropDatabase()
+dropa o banco que está sendo apotando
+
+> var contatos = db.contatos.find()
+> contatos
+{ "_id" : ObjectId("5abaf5d4b39c84b2ef4779ad"), "nome" : "Contato 1 Mongo", "email" : "cont1@empresa.com.br" }
+{ "_id" : ObjectId("5abaf5d7b39c84b2ef4779ae"), "nome" : "Contato 2 Mongo", "email" : "cont2@empresa.com.br" }
+{ "_id" : ObjectId("5abaf5d8b39c84b2ef4779af"), "nome" : "Contato 3 Mongo", "email" : "cont3@empresa.com.br" }
+>
+
+se digitarmos contatos de novo, nada acontecerá por que o a variável não é um array de objetos, mas sim um cursos para o banco.
+
+> var criterio = { "email" : "cont2@empresa.com.br" }
+> var contato = db.contatos.find(criterio)
+> contato
+	{
+	"_id" : ObjectId("530b8260b61fac75624ccfd2"),
+	"nome" : "Contato 2 Mongo",
+	"email" : "cont2@empresa.com.br"
+	}
+
+
+> var criterio = { "nome" : /tato/i }
+> var contatos = db.contatos.find(criterio)
+
+db.contatos.count()
+
+db.contatos.count({ "nome" : /to 2/i })
+
+> var contatoComEmails =
+{
+"nome": "Contato com emails",
+"emails": ["contato@email.com.br", "pessoal@empresa.com.br"]
+}
+> db.contatos.insert(contatoComEmails)
+
+db.contatos.find({"emails" : "pessoal@empresa.com.br"})
+
+usando or no query selector
+---------------------------
+ db.contatos.find({
+ "$or" : [
+ {
+ "email" : "cont2@empresa.com.br"
+ },
+ {
+ "nome" : "Contato 1 Mongo"
+ }
+ ]})
+{ "_id" : ObjectId("5abaf5d4b39c84b2ef4779ad"), "nome" : "Contato 1 Mongo", "email" : "cont1@empresa.com.br" }
+{ "_id" : ObjectId("5abaf5d7b39c84b2ef4779ae"), "nome" : "Contato 2 Mongo", "email" : "cont2@empresa.com.br" }
+
+usando que não contenha
+-----------------------
+db.contatos.find({ "email" : { "$ne" : "cont2@empresa.com.br" } })
+
+
+
+6.13 Indexando documentos
+página 143

@@ -6,7 +6,7 @@ angular.module('contatooh').controller('ContatoController', function($scope, $ro
     console.log($routeParams.contatoId);
 
     // aqui continua no plural, é a rota no lado do servidor
-    var Contato = $resource('/contatos/:id');
+    //var Contato = $resource('/contatos/:id');
 
     if ($routeParams.contatoId){
         Contato.get({id: $routeParams.contatoId},
